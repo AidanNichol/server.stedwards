@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Open Space Web-Map builder Code</title>
+<!-- Download OpenSpace API using your key -->
+<script type="text/javascript" src="https://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key=53F55E0629734819E0530B6CA40ACA3D"></script>
+<!-- <script type= "text/javascript" src="https://openspace.ordnancesurvey.co.uk/osmapapi/script/mapbuilder/deprecated.js"></script>
+<script type= "text/javascript" src="https://openspace.ordnancesurvey.co.uk/osmapapi/script/mapbuilder/basicmap.js"></script>
+<script type= "text/javascript" src="https://openspace.ordnancesurvey.co.uk/osmapapi/script/mapbuilder/searchbox.js"></script> -->
+<script type="text/javascript">
+function initmapbuilder() {
+  //initiate the map
+  var options = {
+    resolutions: [2500, 1000, 500, 200, 100, 50, 25, 10, 5, 4, 2.5, 2, 1],
+  };
+  osMap = new OpenSpace.Map('map', options);
+
+  //configure map options (basicmap.js)
+  // setglobaloptions();
+  //set the center of the map and the zoom level
+  let lat = (368455 + 374849) / 2;
+  let long = (519659 + 528052) / 2;
+  osMap.setCenter(new OpenSpace.MapPoint(lat, long), 7);
+  // osMap.setCenter(new OpenSpace.MapPoint(374280, 525800), 7);
+  // osMap.setCenter(new OpenSpace.MapPoint(426178.86404343, 575160.48064154), 7);
+
+  lgpx = new // .GML('gpx', '../walkdata/2017/2017-09-23/data-2017-09-23-walk-1.gpx', {
+  OpenLayers.Layer
+    .GML(
+    'gpx',
+    'http://server.stedwardsfellwalkers.co.uk/walkdata/2017/2017-09-23/data-2017-09-23-walk-1.gpx',
+    {
+      format: OpenLayers.Format.GPX,
+      style: { strokeColor: 'blue', strokeWidth: 3, strokeOpacity: 1 },
+      projection: new OpenLayers.Projection('EPSG:4326'),
+    },
+  );
+  this.osMap.addLayer(lgpx);
+  console.log('lgpx', lgpx, lat, long);
+}
+</script>
+</head>
+<body onload="initmapbuilder()">
+<div id="map" style="border: 1px solid black; width:540px; height:440px;"></div>
+</body>
+</html>
