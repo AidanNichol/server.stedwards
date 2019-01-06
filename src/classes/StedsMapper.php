@@ -62,8 +62,9 @@ class StedsMapper extends Mapper {
 
     function getWalkRouteGpx($date, $no){
       $xFile = WALKDATA."walkdata/".substr($date,0,4)."/{$date}/data-{$date}-walk-{$no}.gpx";
+      $wFile = WALKDATA."walkdata/".substr($date,0,4)."/{$date}/data-{$date}-walk-{$no}.txt";
 
-      if (!file_exists($xFile)){
+      if (!file_exists($xFile) || filemtime($wFile) > filemtime($xFile)){
 
         $this->makeAllRoutesGpx($date);
       }
@@ -100,8 +101,13 @@ class StedsMapper extends Mapper {
     }
     function getRoutesGpxJ($date){
       $jFile = WALKDATA."walkdata/".substr($date,0,4)."/{$date}/data-{$date}-walk-gpx.json";
-      if (file_exists($jFile))return json_decode(file_get_contents($jFile));
-      else return $this->makeAllRoutesGpx($date);
+      if (!file_exists($jFile)) return $this->makeAllRoutesGpx($date);
+      $jTime = filemtime($jFile);
+      for ($no=1; $no < 6 ; $no++) {
+        $wFile = WALKDATA."walkdata/".substr($date,0,4)."/{$date}/data-{$date}-walk-{$no}.txt";
+        if (!file_exists($wFile) || $jTime < filemtime($wFile)) return $this->makeAllRoutesGpx($date);
+      }
+      return json_decode(file_get_contents($jFile));
     }
     function makeRouteGpx($date, $no, $area){
       $wFile = WALKDATA."walkdata/".substr($date,0,4)."/{$date}/data-{$date}-walk-{$no}.txt";
